@@ -21,7 +21,7 @@ data = {
   ],
   "region": region_slugs[0],
   "size": "s-1vcpu-1gb",
-  "image": "ubuntu-16-04-x64",
+  "image": 31317581,
   "ssh_keys": [813340],
   "backups": False,
   "ipv6": False,
@@ -32,10 +32,9 @@ data = {
   ]
 }
 
-# create = requests.post("https://api.digitalocean.com/v2/droplets",json=data,headers=headers).json()
-# droplet_id = create['droplets'][0]['id']
-
-droplet_id = 80487151
+create = requests.post("https://api.digitalocean.com/v2/droplets",json=data,headers=headers).json()
+print(create)
+droplet_id = create['droplets'][0]['id']
 
 
 while True:

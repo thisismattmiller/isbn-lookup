@@ -20,7 +20,10 @@ def lookup(data):
 			time.sleep(5)
 			return None
 
-	# return {"id":data[0],"results":"r.text r.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.textr.text"}
+	if r.text.find('"stat":"overlimit"') > -1:
+		print(data[0],"overlimit!")
+		return None
+
 	return {"id":data[0],"results":r.text}
 
 
