@@ -5,7 +5,7 @@ import time
 import requests
 import sys, errno
 
-
+base_path = sys.argv[0]
 
 def lookup(data):
 	url = 'http://xisbn.worldcat.org/webservices/xid/isbn/' + str(data[0])  + '?method=getEditions&format=json&fl=*'
@@ -25,7 +25,7 @@ def lookup(data):
 
 
 def update_db(add_to_db):
-	conn = sqlite3.connect('isbn_data.db', timeout=10)
+	conn = sqlite3.connect(base_path + 'isbn_data.db', timeout=10)
 	write_cursor = conn.cursor()
 	for r in add_to_db:
 		# print("UPDATING DB!!! ", r['id'])
@@ -35,9 +35,9 @@ def update_db(add_to_db):
 
 if __name__ == "__main__":
 
-	log = open('log.txt','a')
+	log = open(base_path + 'log.txt','a')
 
-	conn = sqlite3.connect('isbn_data.db', timeout=10)
+	conn = sqlite3.connect(base_path + 'isbn_data.db', timeout=10)
 	read_cursor = conn.cursor()
 
 	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn IS NULL')
