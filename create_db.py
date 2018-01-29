@@ -8,7 +8,7 @@ if __name__ == "__main__":
 	c.execute('''CREATE TABLE IF NOT EXISTS raw_results
 	             (isbn text PRIMARY KEY UNIQUE, xisbn text, classify text)''')
 	count = 0
-	with open("isbn.txt") as f:
+	with open("woo-llc10.txt") as f:
 
 		for isbn in f:
 

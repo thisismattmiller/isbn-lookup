@@ -24,7 +24,7 @@ data = {
   "names": [
     "xisbn-1"
   ],
-  "region": region_slugs[0],
+  "region": region_slugs[4],
   "size": "s-1vcpu-1gb",
   "image": 31317581,
   "ssh_keys": [813340],
@@ -42,7 +42,7 @@ print(create)
 droplet_id = create['droplets'][0]['id']
 
 
-sleep_time = 3
+sleep_time = 10
 
 while True:
   print("looking at the status of ", droplet_id)
@@ -51,10 +51,13 @@ while True:
 
   if 'droplet' in status:
     if status['droplet']['status'] == 'active':
-      print("droplet ready dude, work starting")
-      sleep_time = 10
+      print("droplet active, working")
+      sleep_time = 20
     elif status['droplet']['status'] == 'off':
-      print("droplet off, job done")
+      print("droplet off, job done, deleting")
+      status = requests.delete("https://api.digitalocean.com/v2/droplets/" + str(droplet_id),headers=headers)
+      print(status.status_code)   
+
       break
     else:
       print(status['droplet']['status'])
