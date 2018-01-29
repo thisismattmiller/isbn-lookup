@@ -5,7 +5,7 @@ import time
 import requests
 import sys, errno
 
-base_path = sys.argv[0]
+base_path = sys.argv[1]
 
 def lookup(data):
 	url = 'http://xisbn.worldcat.org/webservices/xid/isbn/' + str(data[0])  + '?method=getEditions&format=json&fl=*'
