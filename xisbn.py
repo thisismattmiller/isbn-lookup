@@ -12,10 +12,6 @@ def lookup(data):
 	try:
 		r = requests.get(url)
 
-		print(r.text)
-		time.sleep(1)
-
-
 	except IOError as e:
 
 		if e.errno == errno.EPIPE:
