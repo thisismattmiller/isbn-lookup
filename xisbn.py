@@ -39,10 +39,21 @@ def update_db(add_to_db):
 
 if __name__ == "__main__":
 
+	log = open('log.txt','a')
+
 	conn = sqlite3.connect('isbn_data.db', timeout=10)
 	read_cursor = conn.cursor()
+
+	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn')
+	total_work = int(read_cursor.fetchone()[0])
+
+	log.write(str(total_work) + ' total ISBN left\n')
+
+
 	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn IS NULL LIMIT 1000')
 	total_work = int(read_cursor.fetchone()[0])
+
+
 	print("Fetching ",total_work,' ISBNs into memory')
 	read_cursor.execute('SELECT * FROM raw_results where xisbn IS NULL LIMIT 1000')	
 	isbns = read_cursor.fetchall()
