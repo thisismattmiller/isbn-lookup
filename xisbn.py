@@ -40,11 +40,11 @@ if __name__ == "__main__":
 	conn = sqlite3.connect('isbn_data.db', timeout=10)
 	read_cursor = conn.cursor()
 
-	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn')
+	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn IS NULL')
 	total_work = int(read_cursor.fetchone()[0])
 
 	log.write(str(total_work) + ' total ISBN left\n')
-
+	log.close()
 
 	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn IS NULL LIMIT 1000')
 	total_work = int(read_cursor.fetchone()[0])
