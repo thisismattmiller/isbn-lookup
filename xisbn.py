@@ -44,9 +44,12 @@ if __name__ == "__main__":
 	read_cursor = conn.cursor()
 
 	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn IS NULL')
-	total_work = int(read_cursor.fetchone()[0])
+	total_work_left = int(read_cursor.fetchone()[0])
 
-	log.write(str(total_work) + ' total ISBN left\n')
+	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn IS NOT NULL')
+	total_work_done = int(read_cursor.fetchone()[0])
+
+	log.write(str(total_work_left) + ' total ISBN left, total ISBNs complete:' +  str(total_work_done) + '\n')
 	log.close()
 
 	read_cursor.execute('SELECT count(isbn) FROM raw_results where xisbn IS NULL LIMIT 1000')

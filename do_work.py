@@ -10,9 +10,14 @@ regions = requests.get("https://api.digitalocean.com/v2/regions",headers=headers
 region_slugs = []
 
 for r in regions['regions']:
-	if r['available'] == True:
-		region_slugs.append(r['slug'])
+  if r['available'] == True:
+    region_slugs.append(r['slug'])
 
+orginal_region_slugs = region_slugs
+region_slugs = []
+for x in range(0,22):
+  for r in orginal_region_slugs:
+    region_slugs.append(r)
 
 
 data = {
@@ -37,19 +42,24 @@ print(create)
 droplet_id = create['droplets'][0]['id']
 
 
+sleep_time = 3
+
 while True:
-	print("looking at the status of ", droplet_id)
+  print("looking at the status of ", droplet_id)
 
-	status = requests.get("https://api.digitalocean.com/v2/droplets/" + str(droplet_id),headers=headers).json()
+  status = requests.get("https://api.digitalocean.com/v2/droplets/" + str(droplet_id),headers=headers).json()
 
-	if 'droplet' in status:
-		if status['droplet']['status'] == 'active':
-			print("droplet ready dude")
-			break
-		else:
-			print(status['droplet']['status'])
+  if 'droplet' in status:
+    if status['droplet']['status'] == 'active':
+      print("droplet ready dude, work starting")
+      sleep_time = 10
+    elif status['droplet']['status'] == 'off':
+      print("droplet off, job done")
+      break
+    else:
+      print(status['droplet']['status'])
 
 
-	else:
-		print("Resource not found: ",droplet_id)
-	time.sleep(1)
+  else:
+    print("Resource not found: ",droplet_id)
+  time.sleep(sleep_time)
