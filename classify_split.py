@@ -13,7 +13,7 @@ filename = sys.argv[1]
 def lookup(data):
 	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data) + '&maxRecs=5000'
 	try:
-		r = requests.get(url)
+		r = requests.get(url, headers={'Connection':'close'})
 
 	except IOError as e:
 
@@ -25,10 +25,10 @@ def lookup(data):
 
 	if r.text.find('<h1>Too Many Requests</h1>') > -1:
 		print("Getting rate limited, pausing this process")
-		time.sleep(60)
+		time.sleep(30)
 		return None
 
-
+	
 	return {"id":data,"results":r.text}
 
 
@@ -67,16 +67,22 @@ if __name__ == "__main__":
 
 	lock = multiprocessing.Lock()
 
-	for result in tqdm.tqdm(multiprocessing.Pool(3).imap_unordered(lookup, isbns), total=len(isbns)):	
+
+	# for result in tqdm.tqdm(multiprocessing.Pool(3).imap_unordered(lookup, isbns), total=len(isbns)):	
+	for isbn in isbns:
+
+		work_counter += 1
+
+		print(str(work_counter) + '/' + str(len(isbns)))
+		result = lookup(isbn)
+		print(result)
 
 		if result != None:
 			results.append(result)
 
-		if len(results) >= 500:
-			lock.acquire()
+		if len(results) >= 50:
 			add_to_db = results
 			results = []
-			lock.release()
 
 			update_db(add_to_db)
 
