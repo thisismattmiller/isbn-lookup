@@ -10,7 +10,7 @@ filename = sys.argv[1]
 
 
 def lookup(data):
-	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data[0]) + '&maxRecs=5000'
+	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data) + '&maxRecs=5000'
 	try:
 		r = requests.get(url)
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
 	isbns = []
 	with open(filename) as read:
 		for l in read:
-			isbns.append(l)
+			isbns.append(l.strip())
 
 	
 
