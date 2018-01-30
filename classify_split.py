@@ -5,6 +5,9 @@ import time
 import requests
 import sys, errno
 
+filename = sys.argv[1]
+
+
 def lookup(data):
 	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data[0]) + '&maxRecs=5000'
 	try:
@@ -28,7 +31,7 @@ def lookup(data):
 
 
 def update_db(add_to_db):
-	with open('classify_todo1.results','a') as f:
+	with open(filename+'.results','a') as f:
 		for x in add_to_db:
 
 			f.write(json.dumps(x) + '\n')
@@ -38,7 +41,7 @@ if __name__ == "__main__":
 
 
 	isbns = []
-	with open('classify_todo1') as read:
+	with open(filename) as read:
 		for l in read:
 			isbns.append(l)
 
