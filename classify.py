@@ -8,20 +8,24 @@ import sys, errno
 base_path = sys.argv[1]
 
 def lookup(data):
-	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data[0])
+	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data[0]) + '&maxRecs=5000'
 	try:
 		r = requests.get(url)
 
 	except IOError as e:
 
-		if e.errno == errno.EPIPE:
-			print("Error on this one:\n",url)
-			# take a little break
-			time.sleep(5)
-			return None
+		print("Error on this one:\n",url)
+		# take a little break
+		time.sleep(5)
+		return None
 
 
-	print(r.text)
+	if r.text.find('<h1>Too Many Requests</h1>') > -1:
+		print("Getting rate limited, pausing this process")
+		time.sleep(60)
+		return None
+
+
 	return {"id":data[0],"results":r.text}
 
 
@@ -64,10 +68,9 @@ if __name__ == "__main__":
 
 	lock = multiprocessing.Lock()
 
-	# for result in multiprocessing.Pool(5).imap(lookup, isbns):
 	for result in tqdm.tqdm(multiprocessing.Pool(10).imap_unordered(lookup, isbns), total=total_work):	
 
-		if results != None:
+		if result != None:
 			results.append(result)
 
 		if len(results) >= 500:
