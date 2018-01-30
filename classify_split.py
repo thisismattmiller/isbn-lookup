@@ -5,6 +5,7 @@ import time
 import requests
 import sys, errno
 import json
+import os
 
 filename = sys.argv[1]
 
@@ -42,11 +43,24 @@ if __name__ == "__main__":
 
 
 	isbns = []
+	compelted_isbns = {}
+	# try to load the .result file first to see if there is anything there
+	if os.path.isfile(filename + '.results'):
+		with open(filename+ '.results') as read:
+			for l in read:
+				d = json.loads(l)
+				compelted_isbns[d['id'].strip()] = True
+
+	print(len(compelted_isbns),'already compelted')
+
 	with open(filename) as read:
 		for l in read:
-			isbns.append(l.strip())
+			if l.strip() not in compelted_isbns:
+				isbns.append(l.strip())
 
-	
+
+	print(len(isbns),' ready to work')
+
 
 	work_counter = 0
 	results = []
