@@ -54,12 +54,12 @@ if __name__ == "__main__":
 	log.write(str(total_work_left) + ' total ISBN left, total ISBNs complete:' +  str(total_work_done) + '\n')
 	log.close()
 
-	read_cursor.execute('SELECT count(isbn) FROM raw_results where classify IS NULL LIMIT 1000')
+	read_cursor.execute('SELECT count(isbn) FROM raw_results where classify IS NULL')
 	total_work = int(read_cursor.fetchone()[0])
 
 
 	print("Fetching ",total_work,' ISBNs into memory')
-	read_cursor.execute('SELECT * FROM raw_results where classify IS NULL LIMIT 1000')	
+	read_cursor.execute('SELECT * FROM raw_results where classify IS NULL')	
 	isbns = read_cursor.fetchall()
 	conn.close()
 
