@@ -28,7 +28,7 @@ def lookup(data):
 		return None
 
 
-	return {"id":data[0],"results":r.text}
+	return {"id":data,"results":r.text}
 
 
 def update_db(add_to_db):
