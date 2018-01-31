@@ -6,14 +6,49 @@ import requests
 import sys, errno
 import json
 import os
+import re
 
 filename = sys.argv[1]
 
 
 def lookup(data):
-	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data) + '&maxRecs=5000'
+	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data) + '&maxRecs=100'
 	try:
+
 		r = requests.get(url, headers={'Connection':'close'})
+
+
+
+		
+		page = re.search(r'\<next\>([0-9]+)\<\/next\>', str(r.text),re.M)
+		if page:
+			results = [r.text]
+			while page:	
+				url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data) + '&maxRecs=100&startRec='+page.group(1)
+				print("Multiple page of editions:",url)
+				try:
+
+					r = requests.get(url, headers={'Connection':'close'})
+
+					if r.text.find('<h1>Too Many Requests</h1>') > -1:
+						print("Getting rate limited while downloading editions")
+						time.sleep(30)
+						return None		
+					
+				except IOError as e:
+					print("Broke trying to get multiple editions")
+					return None
+
+
+				results.append(r.text)
+				page = re.search(r'\<next\>([0-9]+)\<\/next\>', str(r.text),re.M)
+
+
+			print({"id":data,"results":results})
+			return {"id":data,"results":results}
+		
+
+
 
 	except IOError as e:
 
@@ -76,11 +111,10 @@ if __name__ == "__main__":
 
 	print(len(isbns),' ready to work')
 
-
 	work_counter = 0
 	results = []
 
-	lock = multiprocessing.Lock()
+	# lock = multiprocessing.Lock()
 
 
 	# for result in tqdm.tqdm(multiprocessing.Pool(3).imap_unordered(lookup, isbns), total=len(isbns)):	
