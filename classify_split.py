@@ -19,8 +19,23 @@ def lookup(data):
 
 		print("Error on this one:\n",url)
 		# take a little break
-		time.sleep(5)
-		return None
+		time.sleep(1)
+
+		#try again
+		try:
+			r = requests.get(url, headers={'Connection':'close'})
+			return {"id":data,"results":r.text}
+		except IOError as e:
+			print("2nd Error on this one:\n",url)
+			time.sleep(1)
+			try:
+				r = requests.get(url, headers={'Connection':'close'})
+				return {"id":data,"results":r.text}
+			except IOError as e:
+				print("Final Error on this one:\n",url)
+				return None
+
+		
 
 
 	if r.text.find('<h1>Too Many Requests</h1>') > -1:
