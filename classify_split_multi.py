@@ -12,7 +12,10 @@ filename = sys.argv[1]
 
 
 def lookup(data):
+
 	url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data) + '&maxRecs=100'
+
+
 	try:
 
 		r = requests.get(url, headers={'Connection':'close'})
@@ -118,10 +121,7 @@ if __name__ == "__main__":
 	for result in tqdm.tqdm(multiprocessing.Pool(3).imap_unordered(lookup, isbns), total=len(isbns)):	
 
 
-		work_counter += 1
-
-		print(str(work_counter) + '/' + str(len(isbns)))
-		result = lookup(isbn)
+		# print(str(work_counter) + '/' + str(len(isbns)))
 
 		if result != None:
 			results.append(result)
