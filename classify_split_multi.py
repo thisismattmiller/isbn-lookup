@@ -112,24 +112,25 @@ if __name__ == "__main__":
 	work_counter = 0
 	results = []
 
-	# lock = multiprocessing.Lock()
+	lock = multiprocessing.Lock()
 
 
-	# for result in tqdm.tqdm(multiprocessing.Pool(3).imap_unordered(lookup, isbns), total=len(isbns)):	
-	for isbn in isbns:
+	for result in tqdm.tqdm(multiprocessing.Pool(3).imap_unordered(lookup, isbns), total=len(isbns)):	
+
 
 		work_counter += 1
 
 		print(str(work_counter) + '/' + str(len(isbns)))
 		result = lookup(isbn)
 
-
 		if result != None:
 			results.append(result)
 
 		if len(results) >= 50:
+			lock.acquire()
 			add_to_db = results
 			results = []
+			lock.release()
 
 			update_db(add_to_db)
 
