@@ -27,7 +27,7 @@ def lookup(data):
 				url = 'http://classify.oclc.org/classify2/Classify?isbn=' + str(data) + '&maxRecs=100&startRec='+page.group(1)
 				print("Multiple page of editions:",url)
 				try:
-
+					time.sleep(4)
 					r = requests.get(url, headers={'Connection':'close'})
 
 					if r.text.find('<h1>Too Many Requests</h1>') > -1:
@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
 		print(str(work_counter) + '/' + str(len(isbns)))
 		result = lookup(isbn)
-		print(result)
+
 
 		if result != None:
 			results.append(result)
