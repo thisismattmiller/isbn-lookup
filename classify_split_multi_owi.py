@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
 	
 	print(len(isbns),' ready to work')
-	sys.exit()
+
 	work_counter = 0
 	results = []
 
