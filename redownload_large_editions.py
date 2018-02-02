@@ -9,8 +9,8 @@ if __name__ == "__main__":
 	conn = sqlite3.connect('isbn_data_classify.db', timeout=10)
 	read_cursor = conn.cursor()
 
-	read_cursor.execute('SELECT count(isbn) FROM raw_results where classify like \'%<response code="2"/>%\'')
-	total_work_done = int(read_cursor.fetchone()[0])
+	# read_cursor.execute('SELECT count(isbn) FROM raw_results where classify like \'%<response code="2"/>%\'')
+	# total_work_done = int(read_cursor.fetchone()[0])
 
 
 

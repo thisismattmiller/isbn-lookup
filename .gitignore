@@ -5,7 +5,7 @@ __pycache__/
 classify_todo*
 *.db
 *.txt
-
+owi*
 # C extensions
 *.so
 
