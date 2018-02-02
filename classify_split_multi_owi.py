@@ -98,12 +98,15 @@ if __name__ == "__main__":
 
 	with open(filename) as read:
 		for l in read:
-			if l.strip() not in compelted_isbns:
+			i = l.split('|')[0]
+			if i not in compelted_isbns:
 				isbns.append(l.strip())
 
 
-	print(len(isbns),' ready to work')
 
+	
+	print(len(isbns),' ready to work')
+	sys.exit()
 	work_counter = 0
 	results = []
 
