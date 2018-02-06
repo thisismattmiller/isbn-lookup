@@ -8,6 +8,9 @@ classify_todo*
 owi*
 # C extensions
 *.so
+.DS_Store
+examples*
+
 
 # Distribution / packaging
 .Python

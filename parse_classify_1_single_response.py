@@ -18,10 +18,7 @@ if __name__ == "__main__":
 		xml = row[2]
 
 		soup = BeautifulSoup(xml)
-
 		work_soup = soup.find("work")
-
-
 		work_author = None if work_soup.has_attr('author') == False else work_soup['author']
 		work_editions = None if work_soup.has_attr('editions') == False else work_soup['editions']
 		work_eholdings = None if work_soup.has_attr('eholdings') == False else work_soup['eholdings']
@@ -32,7 +29,7 @@ if __name__ == "__main__":
 		work_title = None if work_soup.has_attr('title') == False else work_soup['title']
 		main_oclc = work_soup.text
 
-		print(isbn,work_editions,work_format,work_eholdings)
+
 		authors_soup = soup.find_all("author")
 		authors = []
 		for a in authors_soup:

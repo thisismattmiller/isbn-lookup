@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
 	lock = multiprocessing.Lock()
 
-	for result in tqdm.tqdm(multiprocessing.Pool(10).imap_unordered(lookup, isbns), total=total_work):	
+	for result in tqdm.tqdm(multiprocessing.Pool(3).imap_unordered(lookup, isbns), total=total_work):	
 
 		if result != None:
 			results.append(result)
