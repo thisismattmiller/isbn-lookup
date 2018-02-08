@@ -10,7 +10,8 @@ owi*
 *.so
 .DS_Store
 examples*
-
+google*
+missing.csv
 
 # Distribution / packaging
 .Python

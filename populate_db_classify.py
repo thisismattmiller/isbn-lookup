@@ -12,6 +12,11 @@ def extract_classify(xml):
 
 		work_soup = soup.find("work")
 
+		if work_soup == None:
+			print("can not parse xml:")
+			print(xml)
+			return None
+
 		results = {}
 
 		results['work_author'] = None if work_soup.has_attr('author') == False else work_soup['author']
@@ -80,7 +85,8 @@ def extract_classify(xml):
 
 def write_data(data,cursor):
 
-
+	if data == None:
+		return False
 
 
 	write_cursor.execute('''UPDATE data set 
@@ -141,29 +147,31 @@ if __name__ == "__main__":
 		if xml.find('<response code="2"/>') > -1 or xml.find('<response code=\\"2\\"/>') >-1:
 			counter+=1
 
-			
-			# single response, but may have multiple pages of editions
-			if xml[0] == '<':
-				results = extract_classify(xml)
-				write_data(results,write_cursor)
-
-				pass
-			# multi response
-			elif xml[0] == '[':
-
-				editions = []
-				results = None
-				for xml in json.loads(xml):
+			try:
+				# single response, but may have multiple pages of editions
+				if xml[0] == '<':
 					results = extract_classify(xml)
-					editions = editions + results['editions']
+					write_data(results,write_cursor)
 
-				# overwrite the last ediitons
-				results['editions'] = editions
-				# make owi a list
-				results['work_owi'] = [owis]
-				write_data(results,write_cursor)
-			else:
-				print('2 Problem',xml)
+					pass
+				# multi response
+				elif xml[0] == '[':
+
+					editions = []
+					results = None
+					for xml in json.loads(xml):
+						results = extract_classify(xml)
+						editions = editions + results['editions']
+
+					# overwrite the last ediitons
+					results['editions'] = editions
+					# make owi a list
+					results['work_owi'] = [owis]
+					write_data(results,write_cursor)
+				else:
+					print('2 Problem',xml)
+			except:
+				print("Error on:",isbn)
 
 			# write_data(results,write_cursor)
 
@@ -171,27 +179,28 @@ if __name__ == "__main__":
 		elif xml.find('<response code="4"/>') > -1:
 			counter+=1
 
+			try:
+				# find the one with the largest holdings
+				# print(isbn)
+				editions = []
+				owis = []
+				largest_result = None
+				largest_result_count = 0
+				for xml in json.loads(xml_multi):
+					results = extract_classify(xml)
+					editions = editions + results['editions']
+					owis.append(results['work_owi'])
+					if results['work_holdings'] > largest_result_count:
+						largest_result = results
+				
+				# overwrite the last ediitons
+				results['editions'] = editions
+				# make owi a list
+				results['work_owi'] = owis
+				write_data(results,write_cursor)
 
-			# find the one with the largest holdings
-			# print(isbn)
-			editions = []
-			owis = []
-			largest_result = None
-			largest_result_count = 0
-			for xml in json.loads(xml_multi):
-				results = extract_classify(xml)
-				editions = editions + results['editions']
-				owis.append(results['work_owi'])
-				if results['work_holdings'] > largest_result_count:
-					largest_result = results
-			
-			# overwrite the last ediitons
-			results['editions'] = editions
-			# make owi a list
-			results['work_owi'] = owis
-			write_data(results,write_cursor)
-
-
+			except:
+				print("Error on", isbn)
 			pass
 		elif xml.find('<response code="100"/>') > -1 or xml.find('<response code=\\"100\\"/>') >-1:
 			print(isbn,'100: No input. The method requires an input argument.')
